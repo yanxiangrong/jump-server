@@ -22,31 +22,31 @@ mkdir /run/sshd
 RUN echo "%sudo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/sudo_nopasswd && \
 chmod 440 /etc/sudoers.d/sudo_nopasswd
 
-RUN echo 'ubuntu:$PASSWORD' | chpasswd
+RUN echo "ubuntu:$PASSWORD" | chpasswd
 #RUN sed -i 's/#PermitRootLogin yes/PermitRootLogin yes/' /etc/ssh/sshd_config
 
 RUN sh -c "$(curl -fsSL https://install.ohmyz.sh/install.sh)" "$ZSH" --unattended && \
 chmod -R 755 "$ZSH"
 
 RUN sed -i "s/plugins=(\(.*\))/plugins=(\1 colorize command-not-found common-aliases cp ubuntu docker docker-compose dotenv history)/" "$ZDOTDIR/.zshrc" && \
-echo "\nalias cat='ccat'\nalias less='cless'" >> $ZDOTDIR/.zshrc && \
-echo "\nalias cp='cpv'" >> $ZDOTDIR/.zshrc
+echo "\nalias cat='ccat'\nalias less='cless'" >> "$ZDOTDIR/.zshrc" && \
+echo "\nalias cp='cpv'" >> "$ZDOTDIR/.zshrc"
 
 
 RUN sed -i "s/ZSH_THEME=\"robbyrussell\"/ZSH_THEME=\"$ZSH_THEME\"/" "$ZDOTDIR/.zshrc" && \
 zsh -c "zstyle ':omz:update' mode $ZSH_UPDATE"
 
 RUN git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions && \
-sed -i 's/plugins=(\(.*\))/plugins=(\1 zsh-autosuggestions)/' $ZDOTDIR/.zshrc
+sed -i "s/plugins=(\(.*\))/plugins=(\1 zsh-autosuggestions)/" "$ZDOTDIR/.zshrc"
 
 RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUSTOM/plugins/zsh-syntax-highlighting && \
-sed -i 's/plugins=(\(.*\))/plugins=(\1 zsh-syntax-highlighting)/' $ZDOTDIR/.zshrc
+sed -i "s/plugins=(\(.*\))/plugins=(\1 zsh-syntax-highlighting)/" "$ZDOTDIR/.zshrc"
 
 RUN git clone https://github.com/zsh-users/zsh-completions $ZSH_CUSTOM/plugins/zsh-completions && \
-sed -i '/source $ZSH\/oh-my-zsh.sh/i fpath+=$ZSH_CUSTOM/plugins/zsh-completions/src' $ZDOTDIR/.zshrc
+sed -i "/source $ZSH\/oh-my-zsh.sh/i fpath+=$ZSH_CUSTOM/plugins/zsh-completions/src" "$ZDOTDIR/.zshrc"
 
 RUN git clone https://github.com/zsh-users/zsh-history-substring-search $ZSH_CUSTOM/plugins/zsh-history-substring-search && \
-sed -i 's/plugins=(\(.*\))/plugins=(\1 zsh-history-substring-search)/' $ZDOTDIR/.zshrc
+sed -i "s/plugins=(\(.*\))/plugins=(\1 zsh-history-substring-search)/" "$ZDOTDIR/.zshrc"
 
 RUN chsh -s $(which zsh) ubuntu && \
 chsh -s $(which zsh) root
