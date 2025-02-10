@@ -1,3 +1,5 @@
+[![Docker](https://github.com/yanxiangrong/jump-server/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/yanxiangrong/jump-server/actions/workflows/docker-publish.yml)
+
 初始用户名: `ubuntu`  
 初始密码: `password`
 
