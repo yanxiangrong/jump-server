@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* 
 && localedef -i zh_CN -c -f UTF-8 -A /usr/share/locale/locale.alias zh_CN.UTF-8
 
 RUN apt-get update && \
-apt-get install -y openssh-server zsh sudo curl wget iputils-ping vim git && \
+apt-get install -y openssh-server zsh sudo curl wget iputils-ping vim git python3 python3-pip && \
 mkdir /run/sshd
 
 RUN echo "%sudo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/sudo_nopasswd && \
@@ -27,12 +27,13 @@ RUN echo "ubuntu:$PASSWORD" | chpasswd
 
 RUN sh -c "$(curl -fsSL https://install.ohmyz.sh/install.sh)" "$ZSH" --unattended && \
 chmod -R 755 "$ZSH" && \
-chmod 755 "$ZDOTDIR/.zshrc"
+chmod -R 777 "$ZDOTDIR"
 
 RUN sed -i "s/plugins=(\(.*\))/plugins=(\1 colorize command-not-found common-aliases cp ubuntu docker docker-compose dotenv history)/" "$ZDOTDIR/.zshrc" && \
 echo "\nalias cat='ccat'\nalias less='cless'" >> "$ZDOTDIR/.zshrc" && \
 echo "\nalias cp='cpv'" >> "$ZDOTDIR/.zshrc"
 
+RUN apt-get install -y python3-pygments
 
 RUN sed -i "s/ZSH_THEME=\"robbyrussell\"/ZSH_THEME=\"$ZSH_THEME\"/" "$ZDOTDIR/.zshrc" && \
 zsh -c "zstyle ':omz:update' mode $ZSH_UPDATE"
