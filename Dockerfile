@@ -28,12 +28,12 @@ RUN echo 'ubuntu:$PASSWORD' | chpasswd
 RUN sh -c "$(curl -fsSL https://install.ohmyz.sh/install.sh)" "$ZSH" --unattended && \
 chmod -R 755 "$ZSH"
 
-RUN sed -i 's/plugins=(\(.*\))/plugins=(\1 colorize command-not-found common-aliases cp ubuntu docker docker-compose dotenv history)/' $ZDOTDIR/.zshrc && \
-echo -e "\nalias cat='ccat'\nalias less='cless'" >> $ZDOTDIR/.zshrc && \
-echo -e "\nalias cp='cpv'" >> $ZDOTDIR/.zshrc
+RUN sed -i "s/plugins=(\(.*\))/plugins=(\1 colorize command-not-found common-aliases cp ubuntu docker docker-compose dotenv history)/" "$ZDOTDIR/.zshrc" && \
+echo "\nalias cat='ccat'\nalias less='cless'" >> $ZDOTDIR/.zshrc && \
+echo "\nalias cp='cpv'" >> $ZDOTDIR/.zshrc
 
 
-RUN sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="$ZSH_THEME"/' $ZDOTDIR/.zshrc && \
+RUN sed -i "s/ZSH_THEME=\"robbyrussell\"/ZSH_THEME=\"$ZSH_THEME\"/" "$ZDOTDIR/.zshrc" && \
 zsh -c "zstyle ':omz:update' mode $ZSH_UPDATE"
 
 RUN git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions && \
