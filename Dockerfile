@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* 
 && localedef -i zh_CN -c -f UTF-8 -A /usr/share/locale/locale.alias zh_CN.UTF-8
 
 RUN apt-get update && \
-apt-get install -y openssh-server zsh sudo curl wget iputils-ping vim git python3 python3-pip rsync && \
+apt-get install -y openssh-server zsh sudo curl wget iputils-ping vim git python3 python3-pip rsync screen && \
 mkdir /run/sshd
 
 RUN echo "%sudo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/sudo_nopasswd && \
@@ -33,7 +33,7 @@ RUN echo "export ZSH=$ZSH" >> /etc/zsh/zshenv && \
 echo "export ZSH_CUSTOM=$ZSH_CUSTOM" >> /etc/zsh/zshenv && \
 echo "export ZDOTDIR=$ZDOTDIR" >> /etc/zsh/zshenv
 
-RUN sed -i "s/plugins=(\(.*\))/plugins=(\1 colorize command-not-found common-aliases cp ubuntu docker docker-compose dotenv history zsh-history-substring-search)/" "$ZDOTDIR/.zshrc" && \
+RUN sed -i "s/plugins=(\(.*\))/plugins=(\1 colorize command-not-found common-aliases cp ubuntu dotenv history zsh-history-substring-search sudo git-auto-fetch jump screen ssh ssh-agent)/" "$ZDOTDIR/.zshrc" && \
 echo "alias cat='ccat'\nalias less='cless'" >> "$ZDOTDIR/.zshrc" && \
 echo "alias cp='cpv'" >> "$ZDOTDIR/.zshrc"
 
