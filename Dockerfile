@@ -30,7 +30,7 @@ chmod -R 755 "$ZSH"
 
 RUN sed -i 's/plugins=(\(.*\))/plugins=(\1 colorize command-not-found common-aliases cp ubuntu docker docker-compose dotenv history' $ZDOTDIR/.zshrc && \
 echo -e "\nalias cat='ccat'\nalias less='cless'" >> $ZDOTDIR/.zshrc && \
-echo -e "\nalias cp='cpv'" >> $ZDOTDIR/.zshrc && \
+echo -e "\nalias cp='cpv'" >> $ZDOTDIR/.zshrc
 
 
 RUN sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="$ZSH_THEME"/' $ZDOTDIR/.zshrc && \
