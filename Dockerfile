@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* 
 
 RUN apt-get update && \
 apt-get install -y openssh-server zsh sudo curl wget iputils-ping vim git python3 python3-pip rsync screen && \
+apt-get clean && \
 mkdir /run/sshd
 
 RUN echo "%sudo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/sudo_nopasswd && \
