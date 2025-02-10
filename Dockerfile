@@ -4,7 +4,6 @@ ARG DEBIAN_FRONTEND=noninteractive
 ARG ZSH=/usr/share/oh-my-zsh
 ARG ZSH_CUSTOM=/usr/share/oh-my-zsh/custom
 ARG ZSH_THEME=maran
-ARG ZSH_PLUGINS=zsh-autosuggestions
 ARG ZSH_UPDATE=disabled
 ARG ZDOTDIR=/etc/zsh
 
@@ -17,7 +16,7 @@ RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* 
 && localedef -i zh_CN -c -f UTF-8 -A /usr/share/locale/locale.alias zh_CN.UTF-8
 
 RUN apt-get update && \
-apt-get install -y openssh-server zsh sudo && \
+apt-get install -y openssh-server zsh sudo curl wget iputils-ping vim git && \
 mkdir /run/sshd
 
 RUN echo "%sudo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/sudo_nopasswd && \
@@ -28,6 +27,9 @@ RUN echo 'ubuntu:$PASSWORD' | chpasswd
 
 RUN sh -c "$(curl -fsSL https://install.ohmyz.sh/install.sh)" "$ZSH" --unattended && \
 chmod -R 755 "$ZSH"
+
+RUN sed -i 's/plugins=(\(.*\))/plugins=(\1 colorize)/' $ZDOTDIR/.zshrc && \
+echo -e "\nalias cat='ccat'\nalias less='cless'" >> $ZDOTDIR/.zshrc
 
 RUN sed -i 's/ZSH_THEME="robbyrussell"/ZSH_THEME="$ZSH_THEME"/' $ZDOTDIR/.zshrc && \
 zsh -c "zstyle ':omz:update' mode $ZSH_UPDATE"
