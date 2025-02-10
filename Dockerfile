@@ -1,11 +1,11 @@
 FROM ubuntu:24.04
 
 ARG DEBIAN_FRONTEND=noninteractive
-ARG ZSH=/usr/share/oh-my-zsh
-ARG ZSH_CUSTOM=/usr/share/oh-my-zsh/custom
+ENV ZSH=/usr/share/oh-my-zsh
+ENV ZSH_CUSTOM=/usr/share/oh-my-zsh/custom
 ARG ZSH_THEME=maran
 ARG ZSH_UPDATE=disabled
-ARG ZDOTDIR=/etc/zsh
+ENV ZDOTDIR=/etc/zsh
 
 ARG PASSWORD=password
 
