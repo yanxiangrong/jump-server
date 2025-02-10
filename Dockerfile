@@ -1,11 +1,11 @@
 FROM ubuntu:24.04
 
 ARG DEBIAN_FRONTEND=noninteractive
-ENV ZSH=/usr/share/oh-my-zsh
-ENV ZSH_CUSTOM=/usr/share/oh-my-zsh/custom
+ARG ZSH=/usr/share/oh-my-zsh
+ARG ZSH_CUSTOM=/usr/share/oh-my-zsh/custom
 ARG ZSH_THEME=maran
 ARG ZSH_UPDATE=disabled
-ENV ZDOTDIR=/etc/zsh
+ARG ZDOTDIR=/etc/zsh
 
 ARG PASSWORD=password
 
@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* 
 && localedef -i zh_CN -c -f UTF-8 -A /usr/share/locale/locale.alias zh_CN.UTF-8
 
 RUN apt-get update && \
-apt-get install -y openssh-server zsh sudo curl wget iputils-ping vim git python3 python3-pip && \
+apt-get install -y openssh-server zsh sudo curl wget iputils-ping vim git python3 python3-pip rsync && \
 mkdir /run/sshd
 
 RUN echo "%sudo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/sudo_nopasswd && \
@@ -29,14 +29,18 @@ RUN sh -c "$(curl -fsSL https://install.ohmyz.sh/install.sh)" "$ZSH" --unattende
 chmod -R 755 "$ZSH" && \
 chmod -R 777 "$ZDOTDIR"
 
-RUN sed -i "s/plugins=(\(.*\))/plugins=(\1 colorize command-not-found common-aliases cp ubuntu docker docker-compose dotenv history)/" "$ZDOTDIR/.zshrc" && \
-echo "\nalias cat='ccat'\nalias less='cless'" >> "$ZDOTDIR/.zshrc" && \
-echo "\nalias cp='cpv'" >> "$ZDOTDIR/.zshrc"
+RUN echo "export ZSH=$ZSH" >> /etc/zsh/zshenv && \
+echo "export ZSH_CUSTOM=$ZSH_CUSTOM" >> /etc/zsh/zshenv && \
+echo "export ZDOTDIR=$ZDOTDIR" >> /etc/zsh/zshenv
+
+RUN sed -i "s/plugins=(\(.*\))/plugins=(\1 colorize command-not-found common-aliases cp ubuntu docker docker-compose dotenv history zsh-history-substring-search)/" "$ZDOTDIR/.zshrc" && \
+echo "alias cat='ccat'\nalias less='cless'" >> "$ZDOTDIR/.zshrc" && \
+echo "alias cp='cpv'" >> "$ZDOTDIR/.zshrc"
 
 RUN apt-get install -y python3-pygments
 
 RUN sed -i "s/ZSH_THEME=\"robbyrussell\"/ZSH_THEME=\"$ZSH_THEME\"/" "$ZDOTDIR/.zshrc" && \
-zsh -c "zstyle ':omz:update' mode $ZSH_UPDATE"
+sed -i "/^# zstyle ':omz:update' mode disabled/s/^# //g" "$ZDOTDIR/.zshrc"
 
 RUN git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions && \
 sed -i "s/plugins=(\(.*\))/plugins=(\1 zsh-autosuggestions)/" "$ZDOTDIR/.zshrc"
@@ -45,7 +49,7 @@ RUN git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $ZSH_CUST
 sed -i "s/plugins=(\(.*\))/plugins=(\1 zsh-syntax-highlighting)/" "$ZDOTDIR/.zshrc"
 
 RUN git clone https://github.com/zsh-users/zsh-completions $ZSH_CUSTOM/plugins/zsh-completions && \
-sed -i "/source \$ZSH\/oh-my-zsh.sh/i fpath+=$ZSH_CUSTOM/plugins/zsh-completions/src" "$ZDOTDIR/.zshrc"
+sed -i "/source \$ZSH\/oh-my-zsh.sh/i fpath+=\$ZSH_CUSTOM/plugins/zsh-completions/src" "$ZDOTDIR/.zshrc"
 
 RUN git clone https://github.com/zsh-users/zsh-history-substring-search $ZSH_CUSTOM/plugins/zsh-history-substring-search && \
 sed -i "s/plugins=(\(.*\))/plugins=(\1 zsh-history-substring-search)/" "$ZDOTDIR/.zshrc"
