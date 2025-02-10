@@ -40,7 +40,7 @@ RUN sed -i "s/plugins=(\(.*\))/plugins=(\1 colorize command-not-found common-ali
 echo "alias cat='ccat'\nalias less='cless'" >> "$ZDOTDIR/.zshrc" && \
 echo "alias cp='cpv'" >> "$ZDOTDIR/.zshrc"
 
-RUN apt-get install -y python3-pygments && rm -rf /var/lib/apt/lists/*
+RUN apt-get update || apt-get install -y python3-pygments && rm -rf /var/lib/apt/lists/*
 
 RUN sed -i "s/ZSH_THEME=\"robbyrussell\"/ZSH_THEME=\"$ZSH_THEME\"/" "$ZDOTDIR/.zshrc" && \
 sed -i "/^# zstyle ':omz:update' mode disabled/s/^# //g" "$ZDOTDIR/.zshrc"
