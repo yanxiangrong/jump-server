@@ -15,9 +15,11 @@ ENV TZ=Asia/Shanghai
 RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* \
 && localedef -i zh_CN -c -f UTF-8 -A /usr/share/locale/locale.alias zh_CN.UTF-8
 
+RUN unminimize && rm -rf /var/lib/apt/lists/*
+
 RUN apt-get update && \
 apt-get install -y openssh-server zsh sudo curl wget iputils-ping vim git python3 python3-pip rsync screen && \
-apt-get clean && \
+rm -rf /var/lib/apt/lists/* && \
 mkdir /run/sshd
 
 RUN echo "%sudo ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers.d/sudo_nopasswd && \
